@@ -106,8 +106,18 @@ const del = async(key: string): Promise<void> => {
 
 const setAccessToken = async(userId: string, token: string): Promise<void> =>{
     const key = `access-token:${userId}`;
-    const expiresTime = config.redis.expires_in || '10000'
-    await redisClient.set(key, token, {EX: expiresTime})
+    await redisClient.set(key, token, {EX: Number(config.redis.expires_in)})
+}
+
+const getAccessToken = async(userId: string):Promise<string | null> =>{
+    const key = `access-token:${userId}`;
+    return await redisClient.get(key)
+}
+
+const delAccessToken = async(userId:string):Promise<void> => {
+    const key = `access-token:${userId}`;
+    await redisClient.del(key)
+
 }
 
 const disconnect = async (): Promise<void> => {
@@ -122,6 +132,9 @@ export const RedisClient = {
     get,
     del,
     disconnect,
+    setAccessToken,
+    getAccessToken,
+    delAccessToken,
     publish: redisClient.publish.bind(redisPubClient),
     subscribe: redisClient.subscribe.bind(redisSubClient),
 
