@@ -113,9 +113,22 @@ const deleteSemester = async (
 };
 
 
-const createSemesterFromEvent = async (
-  e: IAcademicSemesterCreatedEvent
-): Promise<void> => {
+// const createSemesterFromEvent = async (
+//   e: IAcademicSemesterCreatedEvent
+// ): Promise<void> => {
+//   await AcademicSemester.create({
+//     title: e.title,
+//     year: e.year,
+//     code: e.code,
+//     startMonth: e.startMonth,
+//     endMonth: e.endMonth,
+//     syncId: e.id
+//   });
+// };
+
+
+const createSemesterFromEvent = async (e:IAcademicSemesterCreatedEvent): Promise<void> => {
+  
   await AcademicSemester.create({
     title: e.title,
     year: e.year,
@@ -124,24 +137,42 @@ const createSemesterFromEvent = async (
     endMonth: e.endMonth,
     syncId: e.id
   });
+
 };
 
-const updateOneIntoDBFromEvent = async (
-  e: IAcademicSemesterCreatedEvent
-): Promise<void> => {
-  await AcademicSemester.findOneAndUpdate(
-    { syncId: e.id },
-    {
-      $set: {
-        title: e.title,
-        year: e.year,
-        code: e.code,
-        startMonth: e.startMonth,
-        endMonth: e.endMonth
-      }
-    }
-  )
-};
+// const updateOneIntoDBFromEvent = async (
+//   e: IAcademicSemesterCreatedEvent
+// ): Promise<void> => {
+//   await AcademicSemester.findOneAndUpdate(
+//     { syncId: e.id },
+//     {
+//       $set: {
+//         title: e.title,
+//         year: e.year,
+//         code: e.code,
+//         startMonth: e.startMonth,
+//         endMonth: e.endMonth
+//       }
+//     }
+//   )
+// };
+
+
+const updateOneIntoDBFromEvent = async (e:IAcademicSemesterCreatedEvent): Promise<void> =>{
+await AcademicSemester.findOneAndUpdate( 
+  {syncId: e.id},
+
+{
+  $set: {
+    title: e.title,
+    year: e.year,
+    code: e.code,
+    startMonth: e.startMonth,
+    endMonth: e.endMonth
+  }
+}
+)
+}
 
 const deleteOneFromDBFromEvent = async (syncId: string): Promise<void> => {
   await AcademicSemester.findOneAndDelete({ syncId });
